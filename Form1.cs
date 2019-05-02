@@ -20,14 +20,14 @@ namespace imageConverter
             InitializeComponent();
         }
         // initilize image as global variable
-        Image img = Image.FromFile("C:\\Users\\Cole Charles\\Desktop\\lena_gray.bmp");
+        Image img = Image.FromFile("C:\\Users\\Admin\\Desktop\\lena_gray.bmp");
 
 
 
 
         public static Bitmap[] Create4Shares()
         {
-            Image img = Image.FromFile("C:\\Users\\Cole Charles\\Desktop\\lena_gray.bmp");
+            Image img = Image.FromFile("C:\\Users\\Admin\\Desktop\\lena_gray.bmp");
             // create bitmap object from image for the set/getpixel functions
             Bitmap image = new Bitmap(img);
 
@@ -198,7 +198,7 @@ namespace imageConverter
 
         public static Bitmap[] Create2Shares()
         {
-            Image img = Image.FromFile("C:\\Users\\Cole Charles\\Desktop\\lena_gray.bmp");
+            Image img = Image.FromFile("C:\\Users\\Admin\\Desktop\\lena_gray.bmp");
             // create bitmap object from image for the set/getpixel functions
             Bitmap image = new Bitmap(img);
 
@@ -315,26 +315,6 @@ namespace imageConverter
             return ret;
         }
 
-        public static System.Collections.BitArray XorArray(System.Collections.BitArray bitsA, System.Collections.BitArray bitsB)
-        {
-            BitArray bitsC = new BitArray(bitsA.Length);
-            for (var i = 0; i < bitsA.Length; i++)
-            {
-                if (bitsA[i] == false && bitsB[i] == false)
-                {
-                    bitsC.Set(i, false);
-                }
-                else if ((bitsA[i] == true && bitsB[i] == false) || (bitsA[i] == false && bitsB[i] == true))
-                {
-                    bitsC.Set(i, true);
-                }
-                else
-                {
-                    bitsC.Set(i, false);
-                }
-            }
-            return bitsC;
-        }
         private void buttonGenerateShares_Click(object sender, EventArgs e)
         {
             if (radioButtonShare2.Checked == true)
@@ -406,12 +386,7 @@ namespace imageConverter
             {
                 PByteFinal[i + 56] = (byte)(OriginalPByteArray[i + 56] ^ keyByteArray[i]);
             }
-            Console.WriteLine(keyByteArray.Length);
-            for (var i = 0; i < 56; i++)
-            {
-                Console.WriteLine(OriginalPByteArray[i]);
-                Console.WriteLine(keyByteArray[i]);
-            }
+           
             // Create SBox Arrays
             string sbox1 = "D1310BA6,98DFB5AC,2FFD72DB,D01ADFB7,B8E1AFED,6A267E96,BA7C9045,F12C7F99,24A19947,B3916CF7,0801F2E2,858EFC16,636920D8,71574E69," +
 "A458FEA3,F4933D7E,0D95748F,728EB658,718BCD58,82154AEE,7B54A41D,C25A59B5,9C30D539,2AF26013,C5D1B023,286085F0,CA417918,B8DB38EF,8E79DCB0,603A180E,6C9E0E8B,B01E8A3E,D71577C1,BD314B27,78AF2FDA," +
@@ -475,122 +450,160 @@ namespace imageConverter
             // encryption code goes here
             //Image img = Image.FromFile("C:\\Users\\Cole Charles\\Desktop\\lena_gray.bmp");
             //// create bitmap object from image for the set/getpixel functions
-            //Bitmap image = new Bitmap(img);
+            // create bitmap object from image for the set/getpixel functions
+            Bitmap image = new Bitmap(img);
 
-            ////create the byte array from the image
-            //byte[] byteArray = new byte[262144];
-            //var count = 0;
-            //for (var i = 0; i < image.Height; i++)
-            //{
-            //    for (var j = 0; j < image.Width; j++)
-            //    {
-            //        byteArray[count] = image.GetPixel(i, j).R;
-            //        count++;
-            //    }
-            //}
-            //byte[] encryptionarrayFinal = new byte[262144];
-            //byte[] xL = new byte[4];
-            //byte[] xR = new byte[4];
+            // create the byte array from the image
+            byte[] byteArray = new byte[262144];
+            var count = 0;
+            for (var i = 0; i < image.Height; i++)
+            {
+                for (var j = 0; j < image.Width; j++)
+                {
+                    byteArray[count] = image.GetPixel(i, j).R;
+                    count++;
+                }
+            }
+            //set up final return array
+            byte[] encryptionarrayFinal = new byte[262144];
+            //count used to loop encryption until all image is done
+            int loopCount = 0;
+            //iterate through whole image
+            while (loopCount < byteArray.Length)
+            {
+                Byte[] xL = new byte[4];
+                Byte[] xR = new byte[4];
+                int tempcount = 0;
+                //16 initial rounds of cipher   
+                for (int i = 0; i < 16; i++)
+                {
+                    //create 
+                    Byte[] byteTemp = new byte[8];
+                    Byte[] pTemp = new byte[4];
+                    //set up temp 64 bit array
+                    for (int k = i * 8; k < 8 * (i + 1); k++)
+                    {
+                        byteTemp[tempcount] = byteArray[k];
+                        tempcount++;
 
-            ////Console.WriteLine(PByteFinal.Length);
-            //// 16 initial rounds of cipher
-            //for (int i = 0; i < 16; i++)
-            //{
-            //    //create
-            //    byte[] byteTemp = new byte[8];
-            //    byte[] pTemp = new byte[4];
-            //    for (int k = i * 8; k < 8 * (i + 1); k++)
-            //    {
-            //        byteTemp[i] = byteArray[i];
-            //    }
+                    }
+                    tempcount = 0;
+                    //partition into 32 bit left
+                    for (int j = 0; j < byteTemp.Length / 2; j++)
+                    {
+                        xL[j] = byteTemp[j];
+                    }
+                    //partition into 32 bit right
+                    for (int j = byteTemp.Length / 2; j < byteTemp.Length; j++)
+                    {
+                        xR[tempcount] = byteTemp[j];
+                        tempcount++;
+                    }
+                    tempcount = 0;
+                    //partition p into 32 bit array
+                    for (int j = i * 4; j < 4 * (i + 1); j++)
+                    {
+                        pTemp[tempcount] = PByteFinal[j];
+                        tempcount++;
+                    }
+                    tempcount = 0;
+                    //XOR xL with P
+                    for (int j = 0; j < xL.Length; j++)
+                    {
+                        int tempA = xL[j];
+                        int tempB = pTemp[j];
+                        int tempC = tempA ^ tempB;
+                        xL[j] = (Byte)tempC;
+                    }
+                    //Function 
+                    int xL1Value = xL[0];
+                    int xL2Value = xL[1];
+                    int xL3Value = xL[2];
+                    int xL4Value = xL[3];
+                    int sbox1Value = sbox1ByteArray[xL1Value];
+                    int sbox2Value = sbox1ByteArray[xL2Value];
+                    int sbox3Value = sbox1ByteArray[xL3Value];
+                    int sbox4Value = sbox1ByteArray[xL4Value];
+                    int fxL = ((((sbox1Value + sbox2Value) % (int)(Math.Pow(2, 32)) ^ sbox3Value) + sbox4Value) % (int)(Math.Pow(2, 32)));
+                    byte[] bytefxL = BitConverter.GetBytes(fxL);
 
-            //    for (int j = 0; j < byteTemp.Length / 2; j++)
-            //    {
-            //        xL[j] = byteTemp[j];
-            //    }
-            //    for (int j = byteTemp.Length / 2; j < byteTemp.Length; j++)
-            //    {
-            //        xR[j - 4] = byteTemp[j];
-            //    }
-            //    for (int j = i * 4; j < 4 * (i + 1); j++)
-            //    {
-            //        //Console.WriteLine(PByteFinal[j+10]);
-            //        // pTemp[j] = PByteFinal[j];
-            //    }
-            //    for (int j = 0; j < xL.Length; j++)
-            //    {
-            //        int tempA = xL[j];
-            //        int tempB = pTemp[j];
-            //        int tempC = tempA ^ tempB;
-            //        xL[j] = (byte)tempC;
-            //    }
+                    for (int j = 0; j < xR.Length; j++)
+                    {
 
-            //    int xL1Value = xL[0];
-            //    int xL2Value = xL[1];
-            //    int xL3Value = xL[2];
-            //    int xL4Value = xL[3];
-            //    int sbox1Value = sbox1ByteArray[xL1Value];
-            //    int sbox2Value = sbox1ByteArray[xL2Value];
-            //    int sbox3Value = sbox1ByteArray[xL3Value];
-            //    int sbox4Value = sbox1ByteArray[xL4Value];
-            //    int fxL = ((((sbox1Value + sbox2Value) % (int)(Math.Pow(2, 32)) ^ sbox3Value) + sbox4Value) % (int)(Math.Pow(2, 32)));
-            //    byte[] bytefxL = BitConverter.GetBytes(fxL);
-
-            //    for (int j = 0; j < xR.Length; j++)
-            //    {
-            //        int tempA = bytefxL[j];
-            //        int tempB = xR[j];
-            //        int tempC = tempA ^ tempB;
-            //        xR[j] = (byte)tempC;
-            //    }
-
-            //    byte[] temp1 = xL.ToArray();
-            //    xL = xR;
-            //    xR = temp1;
-
-            //}
-
-            //byte[] temp2 = xL.ToArray();
-            //xL = xR;
-            //xR = temp2;
-            //byte[] p17Temp = new byte[4];
-            //byte[] p18Temp = new byte[4];
-            //for (int k = 64; k < 68; k++)
-            //{
-            //    p17Temp[k] = PByteFinal[k];
-            //}
-            //for (int k = 68; k < 72; k++)
-            //{
-            //    p18Temp[k] = PByteFinal[k];
-            //}
-            //for (int j = 0; j < xR.Length; j++)
-            //{
-            //    int tempA = xR[j];
-            //    int tempB = p17Temp[j];
-            //    int tempC = tempA ^ tempB;
-            //    xR[j] = (byte)tempC;
-
-            //}
-            //for (int j = 0; j < xL.Length; j++)
-            //{
-            //    int tempA = xL[j];
-            //    int tempB = p18Temp[j];
-            //    int tempC = tempA ^ tempB;
-            //    xL[j] = (byte)tempC;
-            //}
-
-            //List<byte> list1 = new List<byte>(xL);
-            //List<byte> list2 = new List<byte>(xR);
-            //list1.AddRange(list2);
-            //byte[] encryptFinal = list1.ToArray();
-            //List<byte> list3 = new List<byte>(encryptFinal);
-            //List<byte> list4 = new List<byte>(encryptionarrayFinal);
-            //list4.AddRange(list3);
-            //encryptionarrayFinal = list4.ToArray();
-            ////Console.WriteLine(encryptionarrayFinal);
+                        int tempA = bytefxL[j];
+                        int tempB = xR[j];
+                        int tempC = tempA ^ tempB;
+                        xR[j] = (Byte)tempC;
+                    }
+                    //Swap xL and xR
+                    byte[] temp1 = xL.ToArray();
+                    xL = xR;
+                    xR = temp1;
 
 
+                }
+                //Swap xL and xR back
+                byte[] temp2 = xL.ToArray();
+                xL = xR;
+                xR = temp2;
+                //initialize p17 and p18
+                byte[] p17Temp = new byte[4];
+                byte[] p18Temp = new byte[4];
+                for (int k = 64; k < 68; k++)
+                {
+                    p17Temp[tempcount] = PByteFinal[k];
+                }
+                tempcount = 0;
+                for (int k = 68; k < 72; k++)
+                {
+                    p18Temp[tempcount] = PByteFinal[k];
+                }
+                tempcount = 0;
+                //XOR xR with p17
+                for (int j = 0; j < xR.Length; j++)
+                {
+                    int tempA = xR[j];
+                    int tempB = p17Temp[j];
+                    int tempC = tempA ^ tempB;
+                    xR[j] = (Byte)tempC;
+                }
+                //XOR xL with p18
+                for (int j = 0; j < xL.Length; j++)
+                {
+                    int tempA = xL[j];
+                    int tempB = p18Temp[j];
+                    int tempC = tempA ^ tempB;
+                    xL[j] = (Byte)tempC;
+                }
+                //create a list out of xL and xR
+                List<byte> list1 = new List<byte>(xL);
+                List<byte> list2 = new List<byte>(xR);
+                //add xR to xL
+                list1.AddRange(list2);
+                //Store both in temp array
+                byte[] encryptFinal = list1.ToArray();
+                //create a list out of temp array and final array
+                List<byte> list3 = new List<byte>(encryptFinal);
+                List<byte> list4 = new List<byte>(encryptionarrayFinal);
+                //add temp array to final array
+                list4.AddRange(list3);
+                //set final array to finalarray + temp array
+                encryptionarrayFinal = list4.ToArray();
+                //loopcount+64 to get next bits for iteration
+                loopCount = loopCount + 64;
 
+            }
+            Bitmap encryptedPlaintextImage = new Bitmap(img);
+            count = 0;
+            for (var i = 0; i < encryptedPlaintextImage.Width; i++)
+            {
+                for (var j = 0; j < encryptedPlaintextImage.Height; j++)
+                {
+                    encryptedPlaintextImage.SetPixel(i, j, Color.FromArgb(encryptionarrayFinal[count], encryptionarrayFinal[count], encryptionarrayFinal[count]));
+                    count++;
+                }
+            }
+            pictureBox6.Image = encryptedPlaintextImage;
 
             /////////////////////////////////////////////////////////////////////////
             // temporary code to display image as blurry to show Dr. rasheed the gui will erase after
@@ -598,7 +611,7 @@ namespace imageConverter
             Bitmap[] Shares = Create4Shares();
             if (radioButtonShare4.Checked == true)
             {
-                pictureBox6.Image = Shares[1];
+              
                 pictureBox10.Image = Shares[0];
                 pictureBox8.Image = Shares[4];
                 pictureBox9.Image = Shares[5];
@@ -617,7 +630,7 @@ namespace imageConverter
         private void decryptButton_Click(object sender, EventArgs e)
         {
             label3.Visible = true;
-            Image img = Image.FromFile("C:\\Users\\Cole Charles\\Desktop\\lena_gray.bmp");
+            Image img = Image.FromFile("C:\\Users\\Admin\\Desktop\\lena_gray.bmp");
 
             pictureBox11.Image = img;
         }
