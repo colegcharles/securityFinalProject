@@ -1,0 +1,10 @@
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\obj\Debug\securityProject.csprojAssemblyReference.cache
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\obj\Debug\securityProject.Properties.Resources.resources
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\obj\Debug\securityProject.csproj.GenerateResource.cache
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\obj\Debug\securityProject.csproj.CoreCompileInputs.cache
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\bin\Debug\securityProject.exe.config
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\bin\Debug\securityProject.exe
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\bin\Debug\securityProject.pdb
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\obj\Debug\securityProject.exe
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\obj\Debug\securityProject.pdb
+C:\Users\Cole Charles\Desktop\project\securityProject\securityProject\obj\Debug\imageConverter.Form1.resources
