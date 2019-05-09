@@ -52,6 +52,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.decryptButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
+            this.buttonHast = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -74,7 +75,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(18, 10);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(107, 112);
+            this.pictureBox1.Size = new System.Drawing.Size(106, 112);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -124,7 +125,7 @@
             this.pictureBox6.Location = new System.Drawing.Point(18, 150);
             this.pictureBox6.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(107, 112);
+            this.pictureBox6.Size = new System.Drawing.Size(106, 112);
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox6.TabIndex = 6;
             this.pictureBox6.TabStop = false;
@@ -181,7 +182,7 @@
             // 
             this.groupBox2.Controls.Add(this.radioButtonEBC);
             this.groupBox2.Controls.Add(this.radioButtonCBC);
-            this.groupBox2.Location = new System.Drawing.Point(548, 142);
+            this.groupBox2.Location = new System.Drawing.Point(548, 141);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
@@ -221,7 +222,7 @@
             this.buttonEncrypt.Location = new System.Drawing.Point(617, 159);
             this.buttonEncrypt.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonEncrypt.Name = "buttonEncrypt";
-            this.buttonEncrypt.Size = new System.Drawing.Size(84, 27);
+            this.buttonEncrypt.Size = new System.Drawing.Size(84, 28);
             this.buttonEncrypt.TabIndex = 10;
             this.buttonEncrypt.Text = "Encrypt";
             this.buttonEncrypt.UseVisualStyleBackColor = true;
@@ -272,10 +273,11 @@
             this.pictureBox11.Location = new System.Drawing.Point(18, 288);
             this.pictureBox11.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox11.Name = "pictureBox11";
-            this.pictureBox11.Size = new System.Drawing.Size(107, 112);
+            this.pictureBox11.Size = new System.Drawing.Size(106, 112);
             this.pictureBox11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox11.TabIndex = 15;
             this.pictureBox11.TabStop = false;
+            //this.pictureBox11.Click += new System.EventHandler(this.PictureBox11_Click);
             // 
             // label1
             // 
@@ -301,7 +303,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 402);
+            this.label3.Location = new System.Drawing.Point(28, 401);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 13);
@@ -315,7 +317,7 @@
             this.decryptButton.Location = new System.Drawing.Point(617, 373);
             this.decryptButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.decryptButton.Name = "decryptButton";
-            this.decryptButton.Size = new System.Drawing.Size(84, 27);
+            this.decryptButton.Size = new System.Drawing.Size(84, 28);
             this.decryptButton.TabIndex = 19;
             this.decryptButton.Text = "Decrypt";
             this.decryptButton.UseVisualStyleBackColor = true;
@@ -323,19 +325,31 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(529, 373);
+            this.resetButton.Location = new System.Drawing.Point(530, 373);
             this.resetButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(84, 27);
+            this.resetButton.Size = new System.Drawing.Size(84, 28);
             this.resetButton.TabIndex = 0;
             this.resetButton.Text = "Reset";
             this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            // 
+            // buttonHast
+            // 
+            this.buttonHast.Location = new System.Drawing.Point(421, 372);
+            this.buttonHast.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonHast.Name = "buttonHast";
+            this.buttonHast.Size = new System.Drawing.Size(105, 28);
+            this.buttonHast.TabIndex = 20;
+            this.buttonHast.Text = "Hash Verification";
+            this.buttonHast.Visible = false;
+            this.buttonHast.Click += new System.EventHandler(this.ButtonHast_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 444);
+            this.Controls.Add(this.buttonHast);
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.decryptButton);
             this.Controls.Add(this.label3);
@@ -406,6 +420,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button decryptButton;
         private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.Button buttonHast;
     }
 }
 
